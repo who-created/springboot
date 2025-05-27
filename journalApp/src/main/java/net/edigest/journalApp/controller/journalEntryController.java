@@ -35,7 +35,7 @@ public class journalEntryController {
     }
 
     // GET journal entry by ID
-    @GetMapping("id/{myid}")
+    @GetMapping("id/{userName}/{myid}")
     public ResponseEntity<journalEntry> getJournalEntryById(@PathVariable ObjectId myid) {
         Optional<journalEntry> entry = journalEntryService.findById(myid);
         return entry.map(journalEntry -> new ResponseEntity<>(journalEntry, HttpStatus.OK))
@@ -61,19 +61,23 @@ public class journalEntryController {
     }
 
     // PUT update journal entry by ID
-   /*  @PutMapping("id/{id}")
+     @PutMapping("id/{userName}/{id}")
     public ResponseEntity<journalEntry> updateJournalEntryById(
             @PathVariable ObjectId id,
-            @RequestBody journalEntry newEntry) {
+            @RequestBody journalEntry newEntry,
+            @PathVariable String userName) {
 
-       Optional<journalEntry> optionalOldEntry = journalEntryService.findById(id);
+       //Optional<journalEntry> optionalOldEntry = journalEntryService.findById(id);
+         journalEntry old= journalEntryService.findById(id).orElse(null);
 
-        if (optionalOldEntry.isPresent()) {
-            journalEntry oldEntry = optionalOldEntry.get();
-            oldEntry.setTitle((newEntry.getTitle() != null && !newEntry.getTitle().trim().isEmpty()) ? newEntry.getTitle() : oldEntry.getTitle());
-            oldEntry.setContent((newEntry.getContent() != null && !newEntry.getContent().trim().isEmpty()) ? newEntry.getContent() : oldEntry.getContent());
-            journalEntryService.saveEntry(oldEntry, user);
-            return new ResponseEntity<>(oldEntry, HttpStatus.OK);
+
+        //if (optionalOldEntry.isPresent())
+         if (old !=null){
+            //journalEntry oldEntry = optionalOldEntry.get();
+            old.setTitle( newEntry.getTitle() != null && !newEntry.getTitle().equals("") ? newEntry.getTitle() : old.getTitle());
+            old.setContent (newEntry.getContent() != null && !newEntry.getContent().equals("") ? newEntry.getContent() : old.getContent());
+            journalEntryService.saveEntry(old);
+            return new ResponseEntity<>(old, HttpStatus.OK);
         }
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -81,5 +85,4 @@ public class journalEntryController {
 
     }
 
-    */
 }
